@@ -1,0 +1,1210 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <conio.h>
+#include <math.h>
+
+
+//maximum clients=10
+
+struct Client {
+
+	int applicationNo;
+	char name[50];
+	int age;
+	char employment;
+	float income;
+	char loanType;
+	float loanAmount;
+	int tenureYears;
+	float emi;
+	float totalPayable;
+	int totalInstallments;
+	int paidInstallments;
+
+};
+
+struct Client clients[10];
+int clientCount=0;
+int applicationCounter=100001;
+char name[20];
+void generateForm(int index) {
+	char filename[50];
+	sprintf(filename, "application_%d.txt", clients[index].applicationNo);
+	FILE *ptr = fopen(filename, "w");
+	if(ptr == NULL) {
+		printf("Error creating application_form.txt\n");
+		return;
+	}
+
+	fprintf(ptr,"---------------------------------------\n");
+	fprintf(ptr,"       LOAN APPLICATION FORM\n");
+	fprintf(ptr,"-----------------------------------------\n");
+	fprintf(ptr,"Application Number : %d\n\n",clients[index].applicationNo);
+
+	fprintf(ptr,"Loan Type : %c\n",clients[index].loanType);
+	fprintf(ptr,"Loan Amount : %.2f\n",clients[index].loanAmount);
+	fprintf(ptr,"Tenure : %d years\n",clients[index].tenureYears);
+	fprintf(ptr,"EMI : %.2f\n",clients[index].emi);
+
+	fprintf(ptr,"Name : %s\n",clients[index].name);
+	fprintf(ptr,"Age       : %d\n",clients[index].age);
+	fprintf(ptr,"Employment: %c\n",clients[index].employment);
+	fprintf(ptr,"Income    : %.2f\n",clients[index].income);
+
+	fclose(ptr);
+}
+
+void clearInput() {
+    while (getchar() != '\n');
+}
+float salr=0;
+float interestRate=0;
+int tenureYears;
+int installments;
+float totalPayable=0;
+float monthlyInst=0;
+float tax=0.05;
+float interest=0;
+float total=0;
+float downPayment=0;
+float loanAmount=0;
+float loanPercent=0;
+int cc,enter;
+char carname[30];
+long int carPrice=0;
+int choice,ch;
+int validcc;
+int validChoice;
+int  c,f,u,N,yrs0=0,age1,ecriteria;
+char a,tenure,Name[50];
+float rate;
+float result;
+double sal;
+float mirate(float r) {
+	float ans = r/(12*100);
+	return ans;
+}
+float emi(float loanamount,float mirate,int n) {
+	float EMI= (loanamount*mirate*pow(1+mirate,n))/(pow(1+mirate,n)-1);
+	return EMI;
+}
+
+void apology() {
+	printf("Sorry!Can't provide you loan because you do not fulfill our salary requirement for this amount\n");
+	printf("You may extend the tenure to 5 years so that you become eligible then\n");
+		printf("If you want to extend the tenure ,press a and enter\n");
+	printf("Otherwise press b\n");
+
+}
+void tenureentry() {
+	printf("Alright! Now the Tenure is required.\n");
+	printf("Minimum tenure can be of 3 years\n");
+	printf("Maximum tenure can be of 5 years\n");
+	printf("Please enter your desired tenure(Either 3 or 5 years)\n");
+	printf("Press 5 for 5 years and press 3 for three years\n");
+
+}
+void incomesource1() {
+	printf("Income source:\n");
+	 while(1){
+	     printf("If you're a business man , press b and Enter.\n");
+    	printf("If you're a salaried person , press s and Enter.\n");
+        if(scanf(" %c",&a) != 1) {
+            printf("Invalid input! Enter numbers only.\n");
+            while(getchar() != '\n');
+            continue;
+        }
+         if(a != 'b' && a!= 's') {
+            printf("Invalid input! Please enter a or b.\n");
+            while(getchar() != '\n');
+            continue;
+        }
+
+        while(getchar() != '\n');
+        break;
+    }
+
+}
+void details() {
+    while(1) {
+        printf("Enter loan amount (2000000 to 9000000): ");
+        if (scanf("%d", &c) != 1) {
+            printf("Invalid input! Enter numbers only.\n");
+            while(getchar() != '\n');
+            continue;
+        }
+        if(c < 2000000 || c > 9000000) {
+            printf("Invalid input! Please enter again.\n");
+            while(getchar() != '\n');
+            continue;
+        }
+        while(getchar() != '\n');
+        printf("Loan accepted: %d\n", c);
+        break;
+    }
+	tenureentry();
+	while(1) {
+        printf("Enter tenure (3 or 5 years): ");
+        if(scanf(" %d", &f) != 1) {
+            printf("Invalid input! Enter numbers only.\n");
+            while(getchar() != '\n');
+            continue;
+        }
+        if(f != 3 && f != 5) {
+            printf("Invalid input! Please enter 3 or 5.\n");
+            while(getchar() != '\n');
+            continue;
+        }
+        while(getchar() != '\n');
+        break;
+    }
+
+	if(f==3) {
+		rate= mirate(15);
+		printf("Monthly interest rate(decimal) = %.4f\n",rate);
+		f=f*12;
+		result=emi(c,rate,f);
+		printf("EMI(Equated Monthly Installment) = %.2f Rs.\n",result);
+		 while(1) {
+        printf("Enter your monthly salary: ");
+        if(scanf("%lf", &sal) != 1) {
+            printf("Invalid input! Enter numbers only.\n");
+            while(getchar() != '\n');
+            continue;
+        }
+        while(getchar() != '\n');
+        break;
+		 }
+
+		clients[clientCount].income = sal;
+		if(f==36&&sal>=result+150000) {
+			printf("You are eligible to apply");
+			clients[clientCount].applicationNo = applicationCounter++;
+			printf("\nYour Application Number is: %d\n",
+			       clients[clientCount].applicationNo);
+			printf("Please save this number for future reference.\n");
+			strcpy(clients[clientCount].name, Name);
+			clients[clientCount].age = age1;
+			clients[clientCount].employment = a;
+			clients[clientCount].income = sal;
+			clients[clientCount].loanType = 'H';
+			clients[clientCount].loanAmount = c;
+			clients[clientCount].tenureYears = 3;
+			clients[clientCount].emi = result;
+			clients[clientCount].totalInstallments = 36;
+			clients[clientCount].paidInstallments = 0;
+			clients[clientCount].totalPayable = result * 36;
+			generateForm(clientCount);
+			printf("\nYour application form has been saved successfully.\n");
+			clientCount++;
+
+		}
+		if(f==36&&sal<result+150000) {
+			apology();
+			 	scanf(" %c",&tenure);
+				while(tenure!='a'&&tenure!='b') {
+					printf("Invalid input. Please enter either a or b and press enter\n");
+					scanf(" %c",&tenure);
+				}
+
+		}
+		if(tenure=='a') {
+		    while(1) {
+        printf("Enter tenure (5 years): ");
+        if(scanf(" %d", &yrs0) != 1) {
+            printf("Invalid input! Enter number only.\n");
+            while(getchar() != '\n');
+            continue;
+        }
+        if(yrs0 != 5) {
+            printf("Invalid input! Please enter 5.\n");
+            while(getchar() != '\n');
+            continue;
+        }
+        while(getchar() != '\n');
+        break;
+    }
+
+			if(yrs0==5) {
+				rate= mirate(15);
+				printf("Monthly interest rate(decimal) = %.4f\n",rate);
+				yrs0=5*12;
+				result=emi(c,rate,yrs0);
+				printf("EMI(Equated Monthly Installment) = %.2f Rs.\n",result);
+				if(sal<result+150000) {
+					printf("Sorry!Can't provide you loan because you do not fulfill our salary requiremnt for this amount as well\n");
+				}
+				if(sal>result+150000) {
+					printf("You are eligible\n");
+					clients[clientCount].applicationNo = applicationCounter++;
+					printf("\nYour Application Number is: %d\n",
+					       clients[clientCount].applicationNo);
+					printf("Please save this number for future reference.\n");
+					strcpy(clients[clientCount].name, Name);
+					clients[clientCount].age = age1;
+					clients[clientCount].employment = a;
+					clients[clientCount].income = sal;
+					clients[clientCount].loanType = 'H';
+					clients[clientCount].loanAmount = c;
+					clients[clientCount].tenureYears = 5;
+					clients[clientCount].emi = result;
+					clients[clientCount].totalInstallments = 60;
+					clients[clientCount].paidInstallments = 0;
+					clients[clientCount].totalPayable = result * 60;
+					generateForm(clientCount);
+					printf("\nYour application form has been saved successfully.\n");
+					clientCount++;
+
+				}
+
+			}
+		}
+		if(tenure=='b') {
+			printf("Thank you for visiting us");
+		}
+	}
+	if(f==5)	{
+		rate= mirate(15);
+		printf("Monthly interest rate(decimal) = %.4f\n",rate);
+		f=f*12;
+		result=emi(c,rate,f);
+		printf("EMI(Equated Monthly Installment) = %.2f Rs.\n",result);
+		 while(1) {
+        printf("Enter your monthly salary: ");
+        if(scanf("%lf", &sal) != 1) {
+            printf("Invalid input! Enter numbers only.\n");
+            while(getchar() != '\n');
+            continue;
+        }
+        while(getchar() != '\n');
+        break;
+    }
+		if(f==60&&sal<result+150000) {
+			printf("Sorry!Can't provide you loan because you do not fulfill our salary requiremnt for this amount");
+		}
+		if(f==60&&sal>=result+150000) {
+			printf("You are eligible to apply");
+			clients[clientCount].applicationNo = applicationCounter++;
+			printf("\nYour Application Number is: %d\n",
+			       clients[clientCount].applicationNo);
+			printf("Please save this number for future reference.\n");
+			strcpy(clients[clientCount].name, Name);
+			clients[clientCount].age = age1;
+			clients[clientCount].employment = a;
+			clients[clientCount].income = sal;
+			clients[clientCount].loanType = 'H';
+			clients[clientCount].loanAmount = c;
+			clients[clientCount].tenureYears = 5;
+			clients[clientCount].emi = result;
+			clients[clientCount].totalInstallments = 60;
+			clients[clientCount].paidInstallments = 0;
+			clients[clientCount].totalPayable = result * 60;
+			generateForm(clientCount);
+			printf("\nYour application form has been saved successfully.\n");
+			clientCount++;
+		}
+
+	}
+}
+void details2() {
+      while(1) {
+        printf("Enter loan amount (5000000 to 20000000): ");
+        if (scanf("%d", &c) != 1) {
+            printf("Invalid input! Enter numbers only.\n");
+            while(getchar() != '\n');
+            continue;
+        }
+        if(c < 5000000 || c > 20000000) {
+            printf("Invalid input! Please enter again.\n");
+            while(getchar() != '\n');
+            continue;
+        }
+        while(getchar() != '\n');
+        printf("Loan accepted: %d\n", c);
+        break;
+    }
+
+	tenureentry();
+	 while(1) {
+        printf("Enter tenure (3 or 5 years): ");
+        if(scanf(" %d", &f) != 1) {
+            printf("Invalid input! Enter numbers only.\n");
+            while(getchar() != '\n');
+            continue;
+        }
+        if(f != 3 && f != 5) {
+            printf("Invalid input! Please enter 3 or 5.\n");
+            while(getchar() != '\n');
+            continue;
+        }
+        while(getchar() != '\n');
+        break;
+    }
+
+	if(f==3) {
+		rate= mirate(15);
+		printf("Monthly interest rate(decimal) = %.4f\n",rate);
+		f=f*12;
+		result=emi(c,rate,f);
+		printf("EMI(Equated Monthly Installment) = %.2f Rs.\n",result);
+		 while(1) {
+        printf("Enter your monthly salary: ");
+        if(scanf("%lf", &sal) != 1) {
+            printf("Invalid input! Enter numbers only.\n");
+            while(getchar() != '\n');
+            continue;
+        }
+        while(getchar() != '\n');
+        break;
+    }
+		clients[clientCount].income = sal;
+		if(f==36&&sal>=result+150000) {
+			printf("You are eligible to apply");
+			clients[clientCount].applicationNo = applicationCounter++;
+			printf("\nYour Application Number is: %d\n",
+			       clients[clientCount].applicationNo);
+			printf("Please save this number for future reference.\n");
+			strcpy(clients[clientCount].name, Name);
+			clients[clientCount].age = age1;
+			clients[clientCount].employment = a;
+			clients[clientCount].income = sal;
+			clients[clientCount].loanType = 'H';
+			clients[clientCount].loanAmount = c;
+			clients[clientCount].tenureYears = 3;
+			clients[clientCount].emi = result;
+			clients[clientCount].totalInstallments = 36;
+			clients[clientCount].paidInstallments = 0;
+			clients[clientCount].totalPayable = result * 36;
+			generateForm(clientCount);
+			printf("\nYour application form has been saved successfully.\n");
+			clientCount++;
+		}
+		if(f==36&&sal<result+150000) {
+			apology();
+				scanf(" %c",&tenure);
+				while(tenure!='a'&&tenure!='b') {
+					printf("Invalid input. Please enter either a or b and press enter\n");
+					scanf(" %c",&tenure);
+				}
+		}
+		if(tenure=='a') {
+		      while(1) {
+        printf("Enter tenure (5 years): ");
+        if(scanf(" %d", &yrs0) != 1) {
+            printf("Invalid input! Enter number only.\n");
+            while(getchar() != '\n');
+            continue;
+        }
+        if(yrs0 != 5) {
+            printf("Invalid input! Please enter 5.\n");
+            while(getchar() != '\n');
+            continue;
+        }
+        while(getchar() != '\n');
+        break;
+    }
+			if(yrs0==5) {
+				rate= mirate(15);
+				printf("Monthly interest rate(decimal) = %.4f\n",rate);
+				yrs0=5*12;
+				result=emi(c,rate,yrs0);
+				printf("EMI(Equated Monthly Installment) = %.2f Rs.\n",result);
+				if(sal<result+150000) {
+					printf("Sorry!Can't provide you loan because you do not fulfill our salary requiremnt for this amount as well\n");
+				}
+				if(sal>result+150000) {
+					printf("You are eligible\n");
+					clients[clientCount].applicationNo = applicationCounter++;
+					printf("\nYour Application Number is: %d\n",
+					       clients[clientCount].applicationNo);
+					printf("Please save this number for future reference.\n");
+					strcpy(clients[clientCount].name, Name);
+					clients[clientCount].age = age1;
+					clients[clientCount].employment = a;
+					clients[clientCount].income = sal;
+					clients[clientCount].loanType = 'H';
+					clients[clientCount].loanAmount = c;
+					clients[clientCount].tenureYears = 5;
+					clients[clientCount].emi = result;
+					clients[clientCount].totalInstallments = 60;
+					clients[clientCount].paidInstallments = 0;
+					clients[clientCount].totalPayable = result * 60;
+
+					generateForm(clientCount);
+					printf("\nYour application form has been saved successfully.\n");
+					clientCount++;
+
+				}
+
+			}
+		}
+		if(tenure=='b') {
+			printf("Thank you for visiting us");
+		}
+	}
+	if(f==5)	{
+		rate= mirate(15);
+		printf("Monthly interest rate(decimal) = %.4f\n",rate);
+		f=f*12;
+		result=emi(c,rate,f);
+		printf("EMI(Equated Monthly Installment) = %.2f Rs.\n",result);
+		 while(1) {
+        printf("Enter your monthly salary: ");
+        if(scanf("%lf", &sal) != 1) {
+            printf("Invalid input! Enter numbers only.\n");
+            while(getchar() != '\n');
+            continue;
+        }
+        while(getchar() != '\n');
+        break;
+    }
+		if(f==60&&sal<result+150000) {
+			printf("Sorry!Can't provide you loan because you do not fulfill our salary requiremnt for this amount");
+		}
+		if(f==60&&sal>=result+150000) {
+			printf("You are eligible to apply");
+			clients[clientCount].applicationNo = applicationCounter++;
+			printf("\nYour Application Number is: %d\n",
+			       clients[clientCount].applicationNo);
+			printf("Please save this number for future reference.\n");
+			strcpy(clients[clientCount].name, Name);
+			clients[clientCount].age = age1;
+			clients[clientCount].employment = a;
+			clients[clientCount].income = sal;
+			clients[clientCount].loanType = 'H';
+			clients[clientCount].loanAmount = c;
+			clients[clientCount].tenureYears = 5;
+			clients[clientCount].emi = result;
+			clients[clientCount].totalInstallments = 60;
+			clients[clientCount].paidInstallments = 0;
+			clients[clientCount].totalPayable = result * 60;
+			generateForm(clientCount);
+			printf("\nYour application form has been saved successfully.\n");
+			clientCount++;
+
+		}
+	}
+}
+
+void eligibility() {
+    while(1){
+	printf("If you meet the eligibility criteria , press 1 otherwise press 2\n");
+        if(scanf("%d",&ecriteria) != 1) {
+            printf("Invalid input! Enter numbers only.\n");
+            while(getchar() != '\n');
+            continue;
+        }
+         if(ecriteria!= 1 && ecriteria!= 2) {
+            printf("Invalid input! Please enter 1 or 2.\n");
+            while(getchar() != '\n');
+            continue;
+        }
+
+        while(getchar() != '\n');
+        break;
+    }
+
+}
+void house(void) {
+    if(clientCount >= 10) {
+        printf("\nClient limit reached (10). Cannot add more clients.\n");
+        return;
+    }
+    
+	printf("===================================================\n");
+	printf("=========  AAP K KHWAAB HAMARI ZIMMADARI  =========\n");
+	printf("===================================================\n");
+	printf("Welcome to our Constructed Property and Plot Financing Program.\n");
+	printf("It provides financial support for purchasing constructed properties and open plots\n");
+	printf("Please enter your First name:");
+	scanf("%s",Name);
+	while (1) {
+		printf("Enter age: ");
+		printf("Must be between 20 to 60 years\n");
+		if (scanf("%d", &age1) != 1) {
+			printf("Invalid input! Age must be a number.\n");
+		     scanf("%*s");
+			continue;
+		}
+		if (age1 < 20 || age1 > 60) {
+			printf("Age out of range. Enter again from the given range.\n");
+			continue;
+		}
+		printf("Age accepted: %d\n", age1);
+		break;
+	}
+	 while(1){
+	printf("Please press 1 and Enter to get loan details about open  plots\n");
+	printf("Press 2 and Enter to get loan details about constructed property\n ");
+        if(scanf("%d",&N) != 1) {
+            printf("Invalid input! Enter numbers only.\n");
+            while(getchar() != '\n');
+            continue;
+        }
+         if(N != 1 && N!= 2) {
+            printf("Invalid input! Please enter 1 or 2.\n");
+            while(getchar() != '\n');
+            continue;
+        }
+
+        while(getchar() != '\n');
+        break;
+    }
+
+	if(N==1) {
+	     printf("You selected OPEN PLOTS loan.\n");
+		incomesource1();
+		if(a=='b') {
+			printf("Details about open plot are mentioned below:\n");
+			printf("Eligibility criteria:\nYou must have following documents :\n");
+			printf(" 1. Valid NTN certificate.\n");
+			printf(" 2. Income Tax Return of past 3 years.\n");
+			printf(" 3. Bank Statement.\n ");
+			printf(" 4. Max loan amount can be 9000000 and min loan amount must be 2000000\n");
+			eligibility();
+			if(ecriteria==1) {
+				clients[clientCount].age = age1;
+				clients[clientCount].employment = a;
+				clients[clientCount].income = sal;
+				strcpy(clients[clientCount].name, Name);
+				details();
+			}
+			if(ecriteria==2) {
+				printf("Thanks for visiting");
+			}
+		}
+		if (a=='s') {
+			printf("Details about open plot are mentioned below:\n");
+			printf("Eligibility criteria:\nYou must have to fulfill following requiremts to further proceed:\n");
+			printf(" 1. Provide Valid NTN certificate.\n");
+			printf(" 2. Provide Income Tax Return of past 3 years.\n");
+			printf(" 3. Provide Valid salary certificate from employer\n");
+			printf(" 4. Max loan amount can be 9000000 and min loan amount must be 2000000\n");
+			eligibility();
+			if(ecriteria==1) {
+				clients[clientCount].age = age1;
+				clients[clientCount].employment = a;
+				clients[clientCount].income = sal;
+				strcpy(clients[clientCount].name, Name);
+
+				details();
+			}
+			if(ecriteria==2) {
+				printf("Thanks for visiting");
+			}
+		}
+	}
+	if(N==2) {
+	     printf("You selected CONSTRUCTED PROPERTY loan.\n");
+		incomesource1();
+		if(a=='b') {
+			printf("Details about loan for constructed property are mentioned below:\n");
+			printf("Eligibility criteria:\nYou must have to fulfill following requirements for further proceeding:\n");
+			printf(" 1. Provide Valid NTN certificate.\n");
+			printf(" 2. Provide Income Tax Return of past 3 years.\n");
+			printf(" 3. Provide Bank Statement.\n ");
+			printf(" 4. Max loan amount can be 20000000(2 crore) and min loan amount must be 5000000(50 lakh)\n");
+			eligibility();
+			if(ecriteria==1) {
+				clients[clientCount].age = age1;
+				clients[clientCount].employment = a;
+				clients[clientCount].income = sal;
+				strcpy(clients[clientCount].name, Name);
+				details2();
+			}
+			if(ecriteria==2) {
+				printf("Thanks for visiting");
+			}
+		}
+		if (a=='s') {
+			printf("Details about loan for constructed property are mentioned below:\n");
+			printf("Eligibility criteria:\nYou must have to fulfill following requirements to further proceed:\n");
+			printf(" 1. Provide Valid NTN certificate.\n");
+			printf(" 2. Provide Income Tax Return of past 3 years.\n");
+			printf(" 3. Provide Valid salary certificate from employer\n");
+			printf(" 4. Maximum loan amount can be 20000000(2 crore) and min loan amount must be 5000000(50 lakh).\n");
+			eligibility();
+			if(ecriteria==1) {
+				clients[clientCount].age = age1;
+				clients[clientCount].employment = a;
+				clients[clientCount].income = sal;
+				strcpy(clients[clientCount].name, Name);
+
+				details2();
+
+			}
+			if(ecriteria==2) {
+				printf("Thanks for visiting");
+			}
+		}
+	}
+
+}
+          void usedCar(void) {
+
+		printf("\nselect the car type. Write 600,1300,1800");
+		printf("\n600 CC");
+		printf("\n1300 CC");
+		printf("\n1800 CC");
+        scanf("\n %d",&cc);
+		while( cc!=600&& cc!=1300 && cc!=1800 ) {
+		printf("Invalid input. Please Write 600,1300,1800 and press enter\n");
+		scanf("\n %d",&cc);
+	}
+	switch(cc) {
+
+	case 600:
+			carPrice=0;
+			printf("\n select the car : ");
+			printf("\n1. MOVE (PKR 469000)");
+			printf("\n2. ALTO (PKR 423000)");
+			printf("\n3. MEHRAN (PKR 320000)");
+            while(1) {
+           printf("Enter type (1,2 or 3): ");
+           if(scanf(" %d", &choice) != 1) {
+            printf("Invalid input! Enter numbers only.\n");
+            while(getchar() != '\n');
+            continue;
+            }
+            if(choice != 1 && choice != 2 && choice != 3) {
+            printf("Invalid input! Please enter 1,2 or 3.\n");
+            while(getchar() != '\n');
+            continue;
+        }
+        while(getchar() != '\n');
+        break;
+    }
+            scanf("\n %d",&choice);
+		    while( choice!=1 && choice!=2 && choice!=3 ) {
+		    printf("Invalid input. Please select 1,2,3 and press enter\n");
+		    scanf("\n %d",&choice);
+	}
+
+			if(choice==1) {
+				printf("\nyou selected MOVE\nCar price is PKR 469000 ");
+				carPrice=469000;
+			}
+
+			else if(choice==2) {
+				printf("\nyou selected ALTO\nCar price is PKR 423000 ");
+				carPrice=423000;
+			}
+
+			else if(choice==3) {
+				printf("\nyou selected MEHRAN\nCar price is PKR 323000 ");
+				carPrice=323000;
+			}
+			else
+			{
+				printf("\ninvalid choice ");
+			}
+             break;
+
+	case 1300:
+
+			carPrice=0;
+			printf("\n select the car : ");
+			printf("\n1. HONDA CITY (PKR 1400000)");
+			printf("\n2. SUZUKI SWIFT (PKR 1800000)");
+            printf("\n press 1,2 or 3 : ");
+              while(1) {
+           printf("Enter type (1,2 or 3): ");
+           if(scanf(" %d", &choice) != 1) {
+            printf("Invalid input! Enter numbers only.\n");
+            while(getchar() != '\n');
+            continue;
+            }
+            if(choice != 1 && choice != 2 && choice != 3) {
+            printf("Invalid input! Please enter 1,2 or 3.\n");
+            while(getchar() != '\n');
+            continue;
+        }
+        while(getchar() != '\n');
+        break;
+    }
+
+			if(choice==1) {
+				printf("\nyou selected HONDA CITY\nCar price is PKR 1400000 ");
+				carPrice=1400000;
+			}
+
+			else if(choice==2) {
+				printf("\nyou selected HONDA SWIFT\nCar price is PKR 1800000 ");
+				carPrice=1800000;
+			}
+
+			else
+			{
+				printf("\ninvalid choice ");
+			}
+
+            break;
+	case 1800:
+
+			carPrice=0;
+			printf("\n select the car : ");
+			printf("\n1. HONDA CIVIC (PKR 3044000)");
+			printf("\n2. TOYOTA COROLLA (PKR 2009000)");
+			printf("\n press 1,2: ");
+			 scanf("\n %d",&choice);
+		     while(1) {
+           printf("Enter type (1,2 or 3): ");
+           if(scanf(" %d", &choice) != 1) {
+            printf("Invalid input! Enter numbers only.\n");
+            while(getchar() != '\n');
+            continue;
+            }
+            if(choice != 1 && choice != 2 && choice != 3) {
+            printf("Invalid input! Please enter 1,2 or 3.\n");
+            while(getchar() != '\n');
+            continue;
+        }
+        while(getchar() != '\n');
+        break;
+    }
+			if(choice==1) {
+				printf("\nyou selected HONDA CIVIC\nCar price is PKR 3044000 ");
+				carPrice=3044000;
+			}
+
+			else if(choice==2) {
+				printf("\nyou selected TOYOTA COROLLA\nCar price is PKR 2009000 ");
+				carPrice=2009000;
+			}
+
+			else
+			{
+				printf("\ninvalid choice ");
+			}
+            break;
+	default:
+		printf("\nplease select from above options");
+	}
+          }
+void newCar(void) {
+		 printf("\nSelect the car type");
+    printf("\n600 CC");
+    printf("\n1300 CC");
+    printf("\n1800 CC");
+    printf("\nWrite 600, 1300 or 1800: ");
+
+    while (1) {
+        if (scanf("%d", &cc) != 1) {
+            printf("Invalid input! Numbers only.\n");
+            clearInput();
+            continue;
+        }
+        if (cc == 600 || cc == 1300 || cc == 1800) break;
+        printf("Invalid choice! Enter 600, 1300 or 1800:\n");
+        clearInput();
+    }
+    switch (cc) {
+
+    case 600:
+        printf("\n1. MOVE (PKR 469000)");
+        printf("\n2. ALTO (PKR 423000)");
+        printf("\n3. MEHRAN (PKR 320000)");
+        printf("\nEnter choice: ");
+
+        while (1) {
+            if (scanf("%d", &choice) != 1) {
+                printf("Numbers only!\n");
+                clearInput();
+                continue;
+            }
+            if (choice >= 1 && choice <= 3) break;
+            printf("Enter 1, 2 or 3:\n");
+        }
+
+        if (choice == 1) carPrice = 469000;
+        else if (choice == 2) carPrice = 423000;
+        else carPrice = 320000;
+        break;
+
+    case 1300:
+        printf("\n1. HONDA CITY (PKR 1400000)");
+        printf("\n2. SUZUKI SWIFT (PKR 1800000)");
+        printf("\nEnter choice: ");
+
+        while (1) {
+            if (scanf("%d", &choice) != 1) {
+                printf("Numbers only!\n");
+                clearInput();
+                continue;
+            }
+            if (choice == 1 || choice == 2) break;
+            printf("Enter 1 or 2:\n");
+        }
+
+        if (choice == 1) carPrice = 1400000;
+        else carPrice = 1800000;
+        break;
+
+    case 1800:
+        printf("\n1. HONDA CIVIC (PKR 3044000)");
+        printf("\n2. TOYOTA COROLLA (PKR 2009000)");
+        printf("\nEnter choice: ");
+
+        while (1) {
+            if (scanf("%d", &choice) != 1) {
+                printf("Numbers only!\n");
+                clearInput();
+                continue;
+            }
+            if (choice == 1 || choice == 2) break;
+            printf("Enter 1 or 2:\n");
+        }
+
+        if (choice == 1) carPrice = 3044000;
+        else carPrice = 2009000;
+        break;
+    }
+
+    printf("\nFinal New Car Price: PKR %d\n", carPrice);
+}
+
+void showLoanDetails(float carPrice,char key,float sal,float earn) {
+     if(clientCount >= 10) {
+        printf("\nClient limit reached (10). Cannot add more clients.\n");
+        return;
+    }
+
+	printf("\n---------------------------");
+	printf("\nPRESS L TO GET LOAN DETAILS");
+	printf("\n---------------------------");
+
+	char ps;
+	scanf(" %c",&ps);
+	while( ps!='l'&&ps!='L') {
+		printf("Invalid input. Please select L and press enter\n");
+		scanf(" %c",&ps);
+	}
+	if(ps=='l' || ps=='L') {
+
+		if(((key=='s' || key=='S') && salr<=130000) || ((key=='B' || key=='b') && earn<=150000)) {
+
+			loanPercent=0.50;
+			tenureYears=3;
+			interestRate=0.10;
+		}
+
+		else {
+			loanPercent=0.70;
+			tenureYears=5;
+			interestRate=0.12;
+		}
+
+		loanAmount=carPrice*loanPercent;
+		downPayment=carPrice-loanAmount;
+
+
+		printf("\n-----------------------------");
+
+
+		installments=tenureYears*12;
+		interest=loanAmount*interestRate*tenureYears;
+		total=interest*tax;
+		totalPayable=loanAmount+interest+total;
+		monthlyInst=totalPayable/installments;
+
+		clients[clientCount].loanAmount=loanAmount;
+		clients[clientCount].tenureYears=tenureYears;
+		clients[clientCount].emi=monthlyInst;
+		clients[clientCount].totalPayable=totalPayable;
+		clients[clientCount].totalInstallments=installments;
+		clients[clientCount].paidInstallments=0;
+
+		printf("\n============================");
+		printf("\n------LOAN SUMMARY------");
+		printf("\n============================");
+
+		printf("\nTime Tenure : %d",tenureYears);
+		printf("\nNo. of installments : %d",installments);
+		printf("\nThe loan amount is : PKR %.2f",loanAmount);
+		printf("\nThe down payment is : %.2f",downPayment);
+		printf("\nCyber Tax : %f",tax);
+		printf("\nAnnual interest rate : %.2f",interestRate);
+		printf("\nTotal Payable Amount : PKR %.2f",totalPayable);
+		printf("\nYOUR MONTHLY INSTALLMENT :PKR %.2f",monthlyInst);
+
+		generateForm(clientCount);
+		printf("\nYour application form has been saved successfully.\n");
+		 printf("\nEnter your first name : ");
+        scanf("%s",name);
+
+		clients[clientCount].applicationNo= applicationCounter ++;
+	    printf("\nYour Application Number is: %d\n",clients[clientCount].applicationNo);
+	    printf("Please save this number for future reference.\n");
+	    clients[clientCount].loanType='C';
+	    clients[clientCount].age=age1;
+	    clients[clientCount].employment=key;
+	    strcpy(clients[clientCount].name,name);
+        clientCount++;
+	}
+}
+float earn=0;
+int age;
+int car(void) {
+    if(clientCount >= 10) {
+        printf("\nClient limit reached (10). Cannot add more clients.\n");
+        return 0;
+    }
+    
+	printf("=======================================");
+	printf("\n==========>AITMAAD KI CHAABI<==========");
+	printf("\n=======================================");
+	printf("\n");
+	printf("\nDrive Your Dream Car With Us");
+	printf("\n");
+	printf("----Eligibilty Criteria----");
+
+	printf("\n1. minimum age should be 25");
+
+	printf("\n2. maximum age limit of applicant should not exceed 60");
+
+	printf("\n3. minimum 2 years continuous employment history for salaried professionals");
+
+	printf("\n4. minimum 3 years of business experience involved in current experience / self employed professional");
+
+	printf("\n5. salaried individuals typically need a minimum monthly income of PKR 70,000 ");
+
+	printf("\n6. self employed individuals must show stable earnings");
+
+	printf("\n===========================================");
+
+	printf("\n read above instructions carefully ");
+
+	printf("\n if you meet our eligibility criteria then press one to proceed further");
+
+	printf("\n if you want to exit press zero\n");
+
+	printf(" if you want to proceed press one\n");
+	
+	 while(1) {
+      
+        if(scanf("%d", &ch) != 1) {
+            printf("Invalid input! Enter numbers only.\n");
+            while(getchar() != '\n');
+            continue;
+        }
+        if(ch!= 1 && ch != 0 ) {
+            printf("Invalid input! Please enter Either 1 or 0.\n");
+            while(getchar() != '\n');
+            continue;
+        }
+        while(getchar() != '\n');
+        break;
+    }
+	
+
+	if(ch==0) {
+		printf("thanks for coming");
+		return 0;
+	}
+
+    if(ch==1){
+		while (1) {
+		printf("Enter age: ");
+		printf("Must be between 20 to 60 years\n");
+		if (scanf("%d", &age1) != 1) {
+			printf("Invalid input! Age must be a number.\n");
+		     scanf("%*s");
+			continue;
+		}
+		if (age1 < 20 || age1 > 60) {
+			printf("Age out of range. Enter again from the given range.\n");
+			continue;
+		}
+		printf("Age accepted: %d\n", age1);
+		break;
+	}}
+	printf("\nenter your type of employment : salaried or self employed");
+
+	printf("\npress S for salaried and B for self employed ");
+
+	char key;
+	scanf(" %c",&key);
+	while( key!='s'&& key!='S' && key!='b' && key!='B') {
+		printf("Invalid input. Please select s or b and press enter\n");
+		scanf(" %c",&key);
+	}
+
+	if (key == 'S' || key == 's') {
+	    while(1){
+		  printf("Enter your monthly salary:\n ");
+        if(scanf("%f", &salr) != 1) {
+            printf("Invalid input! Enter numbers only.\n");
+            while(getchar() != '\n');
+            continue;
+        }
+        while(getchar() != '\n');
+        break;
+		 }
+
+		if (age1 < 20 || age1 >60 || salr < 70000) {
+			printf("\nSorry, you do not meet the criteria.");
+			return 0;
+		}
+	}
+	else if (key == 'B' || key == 'b') {
+	while(1){
+		  printf("Enter your monthly salary:\n ");
+        if(scanf("%f", &earn) != 1) {
+            printf("Invalid input! Enter numbers only.\n");
+            while(getchar() != '\n');
+            continue;
+        }
+        while(getchar() != '\n');
+        break;
+		 }
+		if (age1 < 20 || age1 > 60 || earn < 100000) {
+			printf("\nSorry, you do not meet the criteria.");
+			return 0;
+		}
+	}
+	else {
+		printf("\nInvalid employment type.");
+		return 0;
+	}
+
+	printf("\nCongratulations %s! You are eligible for the loan.\n", name);
+
+	if(key=='S' || key=='s') {
+		clients[clientCount].income=salr;
+	}
+	else
+		clients[clientCount].income=earn;
+
+
+	printf("\n===========================================");
+
+	printf("\n----Our Loan Schemes----");
+
+	printf("\nchoose one");
+
+	printf("\nused car or new car");
+
+	printf("\npress U for used and N for new ");
+	char car;
+	    scanf(" %c",&car);
+    	while( car!='u'&& car!='U' && car!='n' && car!='N') {
+		printf("Invalid input. Please select u or n and press enter\n");
+		scanf(" %c",&car);
+	}
+
+	if(car=='u' || car=='U') {
+		usedCar();
+
+	}
+	if(carPrice>0) {
+		showLoanDetails( carPrice, key,salr, earn);
+	}
+	else if(car=='n' || car=='N') {
+		newCar();
+
+		if(carPrice>0) {
+			showLoanDetails( carPrice, key,salr, earn);
+
+		}
+	}
+}
+void viewClient() {
+    
+	int app;
+	int found = 0;
+	printf("\n Enter Application no. : ");
+	scanf("%d",&app);
+
+	for(int i=0; i<clientCount; i++) {
+		if(clients[i].applicationNo==app) {
+			found = 1;
+			printf("\n Application No.   : %d",clients[i].applicationNo);
+			printf("\n Name              : %s",clients[i].name);
+			printf("\n Age               : %d",clients[i].age );
+			printf("\n Employent         : %c",clients[i].employment );
+			printf("\n Loan Type         : %c",clients[i].loanType);
+			printf("\n Loan Amount       : %.2f",clients[i].loanAmount);
+			printf("\n EMI               : %.2f",clients[i].emi);
+			printf("\n Paid Installments : %d / %d",clients[i].paidInstallments,clients[i].totalInstallments);
+			break;
+		}
+	}
+	if(found!=1)
+		printf(" \n Record not found !\n Try again");
+}
+void payInstallment() {
+	int app;
+	int found = 0;
+	printf("\nEnter Application Number: ");
+	scanf("%d",&app);
+
+	for(int i=0; i<clientCount; i++) {
+		if(clients[i].applicationNo == app) {
+			found = 1;
+
+			if(clients[i].paidInstallments < clients[i].totalInstallments) {
+				clients[i].paidInstallments++;
+				printf("\nInstallment updated successfully!");
+			}
+			else {
+				printf("\nAll installments already paid!");
+			}
+			break;
+		}
+	}
+	if(found!=1)
+		printf("\nInvalid Application Number! \nTry again");
+}
+int main() {
+  while (clientCount < 10){
+		printf("\n===================================================\n");
+		printf("=========  Z & N FINANCE CORPORATION  =========\n");
+		printf("===================================================\n");
+		printf("Select one of the options given below to proceed:\n");
+		printf("1. OPEN PLOTS / CONSTRUCTED PROPERTY SCHEME , \n");
+		printf("2. IN CARS SCHEME \n");
+		printf("3. View Client Details\n");
+		printf("4  Pay Installment\n");
+		printf("5. Quit Early \n");
+		 while(1) {
+        if(scanf("%d", &enter) != 1) {
+            printf("Invalid input! Enter numbers only.\n");
+            while(getchar() != '\n');
+            continue;
+        }
+        if(enter!= 1 && enter != 2 && enter !=3 && enter !=4 && enter!=5) {
+            printf("Invalid input! Please enter 1,2,3,4 or 5.\n");
+            while(getchar() != '\n');
+            continue;
+        }
+        while(getchar() != '\n');
+        break;
+    }
+		if(enter==5 ) {
+			printf("Thanks For Coming");
+			return 0;
+		}
+		else if(enter==1) {
+			house();
+		}
+		else if(enter==2) {
+			car();
+		}
+		else if(enter==3) {
+			viewClient();
+		}
+		else if(enter==4) {
+			payInstallment();
+		}
+		
+}
+
+       printf("\nClient limit reached (10). Program ending.\n");
+	return 0;
+}
+
+
+
+
+
